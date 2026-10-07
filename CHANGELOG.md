@@ -5,6 +5,12 @@ the entries above your old version and do what their **After pulling** line says
 must act, **minor** for something new, **patch** for fixes. Team-owned files (project.json, PROJECT.md,
 workflow.json, team-* skills and agents) and docs need no version.
 
+## 0.1.1 (2026-10-07)
+
+- `settings.json`: the read-only `git -C <repo> status|log|diff|branch|fetch` rules now match (they mixed `*` with
+  the `:*` prefix syntax, which Claude Code never matches, so those commands asked every time).
+- **After pulling:** restart Claude Code.
+
 ## 0.1.0 (2026-10-07)
 
 First version, extracted from a production team setup and made configurable.
