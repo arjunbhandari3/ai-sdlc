@@ -55,10 +55,11 @@ def skills(root, team=False):
     return rows
 
 
-def agents(root):
+def agents(root, team=False):
+    """The kit's agents, or (team=True) the team's own agents/team-*."""
     rows = ["| Agent | Does |", "|---|---|"]
     for f in sorted(os.listdir(os.path.join(root, "agents"))):
-        if f.endswith(".md"):
+        if f.endswith(".md") and f.startswith("team-") == team:
             fm = frontmatter(os.path.join(root, "agents", f))
             rows.append(f"| `{fm.get('name', f[:-3])}` | {cell(first_sentence(fm.get('description', '')))} |")
     return rows
@@ -140,7 +141,7 @@ def permissions(root):
     return rows
 
 
-TABLES = {"skills": skills, "team-skills": lambda root: skills(root, team=True), "agents": agents, "workflows": workflows, "scripts": scripts, "hooks": hooks,
+TABLES = {"skills": skills, "team-skills": lambda root: skills(root, team=True), "agents": agents, "team-agents": lambda root: agents(root, team=True), "workflows": workflows, "scripts": scripts, "hooks": hooks,
           "permissions": permissions}
 
 
