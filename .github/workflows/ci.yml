@@ -1,0 +1,26 @@
+# CI for ai-sdlc (and for a team's copy of it): tests, config, version, docs and lint. Nothing is deployed.
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.12"]  # the oldest supported, and a current one
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the version check diffs a PR against its base
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s hooks/tests -v
+      - run: python -m unittest discover -s scripts/tests -v
+      - run: if [ -d team/tests ]; then python -m unittest discover -s team/tests -v; fi
+      - run: python scripts/sdlc.py validate
+      - run: python scripts/version_check.py ${{ github.base_ref && format('--base origin/{0}', github.base_ref) || '' }}
+      - run: python scripts/docs.py --check
+      - run: pip install -q ruff && ruff check .

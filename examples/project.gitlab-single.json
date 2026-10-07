@@ -1,0 +1,60 @@
+{
+  "_doc": "One service on GitLab with Linear tickets (ENG-7), staging and production branches, health data.",
+  "name": "Care service",
+  "repos": [
+    {
+      "name": "care-service",
+      "role": "Go API",
+      "onEdit": [
+        {
+          "files": "*.go",
+          "run": "gofmt -w {file}",
+          "fix": true
+        },
+        {
+          "files": "*.go",
+          "run": "go vet ./..."
+        }
+      ]
+    }
+  ],
+  "git": {
+    "host": "gitlab",
+    "org": "acme-health",
+    "base": "main",
+    "protectedBranches": [
+      "main",
+      "production"
+    ],
+    "environments": [
+      {
+        "name": "staging",
+        "branch": "staging"
+      }
+    ]
+  },
+  "tickets": {
+    "tracker": "none",
+    "pattern": "ENG-\\d+"
+  },
+  "commits": {
+    "style": "ticket",
+    "maxSubjectLength": 72,
+    "forbidAiMentions": true
+  },
+  "data": {
+    "sensitivity": "phi",
+    "dataFiles": [
+      ".csv",
+      ".hl7",
+      ".pdf",
+      ".xlsx"
+    ]
+  },
+  "realSystems": [
+    {
+      "command": "make deploy*",
+      "reason": "Deploys to a real environment."
+    }
+  ]
+}
