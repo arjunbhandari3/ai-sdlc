@@ -5,6 +5,11 @@ the entries above your old version and do what their **After pulling** line says
 must act, **minor** for something new, **patch** for fixes. Team-owned files (project.json, PROJECT.md,
 workflow.json, team-* skills and agents) and docs need no version.
 
+## 0.1.3 (2026-10-07)
+
+- `CLAUDE.md`: a skill started without a required argument asks for it first, before running anything.
+- **After pulling:** restart Claude Code.
+
 ## 0.1.2 (2026-10-07)
 
 - Generated docs: team agents (`agents/team-*`) stay out of the kit's agents table, so a team's copy keeps
