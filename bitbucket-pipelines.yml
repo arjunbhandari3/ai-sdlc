@@ -1,0 +1,29 @@
+# CI for ai-sdlc (and for a team's copy of it) on Bitbucket: tests, config, version, docs and lint.
+clone:
+  depth: full  # the version check diffs a PR against its destination
+definitions:
+  steps:
+    - step: &check
+        name: Tests, config, version, docs, lint
+        image: python:3.9  # the oldest Python ai-sdlc supports
+        script:
+          - python3 -m unittest discover -s hooks/tests -v
+          - python3 -m unittest discover -s scripts/tests -v
+          - if [ -d team/tests ]; then python3 -m unittest discover -s team/tests -v; fi
+          - python3 scripts/sdlc.py validate
+          - |
+            if [ -n "${BITBUCKET_PR_DESTINATION_BRANCH:-}" ]; then
+              git fetch -q origin "$BITBUCKET_PR_DESTINATION_BRANCH"
+              python3 scripts/version_check.py --base "origin/$BITBUCKET_PR_DESTINATION_BRANCH"
+            else
+              python3 scripts/version_check.py
+            fi
+          - python3 scripts/docs.py --check
+          - pip install -q ruff && ruff check .
+pipelines:
+  pull-requests:
+    "**":
+      - step: *check
+  branches:
+    main:
+      - step: *check

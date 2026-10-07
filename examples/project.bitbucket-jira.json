@@ -1,0 +1,97 @@
+{
+  "_doc": "Several repos on Bitbucket, Jira tickets (PAY-123), ticket-prefixed commits, dev/qa/uat environment branches.",
+  "name": "Payments",
+  "repos": [
+    {
+      "name": "payments-api",
+      "role": "Backend API",
+      "onEdit": [
+        {
+          "files": "*.js,*.ts,*.json",
+          "run": "node_modules/.bin/prettier --write --log-level warn {file}",
+          "fix": true
+        },
+        {
+          "files": "*.js,*.ts",
+          "run": "node_modules/.bin/eslint --fix --quiet {file}"
+        },
+        {
+          "files": "src/*.js",
+          "run": "node_modules/.bin/mocha {test}",
+          "test": "test/{name}.spec.js"
+        }
+      ]
+    },
+    {
+      "name": "payments-web",
+      "role": "Frontend",
+      "onEdit": [
+        {
+          "files": "*.js,*.jsx,*.ts,*.tsx,*.css",
+          "run": "node_modules/.bin/prettier --write --log-level warn {file}",
+          "fix": true
+        }
+      ]
+    },
+    {
+      "name": "payments-worker",
+      "role": "Queue consumer (Lambda)"
+    }
+  ],
+  "git": {
+    "host": "bitbucket",
+    "org": "acme",
+    "base": "main",
+    "protectedBranches": [
+      "main"
+    ],
+    "environments": [
+      {
+        "name": "dev",
+        "branch": "develop"
+      },
+      {
+        "name": "qa",
+        "branch": "qa"
+      },
+      {
+        "name": "uat",
+        "branch": "uat"
+      }
+    ]
+  },
+  "tickets": {
+    "tracker": "jira",
+    "pattern": "PAY-\\d+",
+    "envBranch": "{ticket}-{env}"
+  },
+  "commits": {
+    "style": "ticket",
+    "maxSubjectLength": 72,
+    "forbidAiMentions": true
+  },
+  "data": {
+    "sensitivity": "financial",
+    "dataFiles": [
+      ".csv",
+      ".xlsx",
+      ".pdf"
+    ]
+  },
+  "realSystems": [
+    {
+      "command": "npm run seed*",
+      "reason": "Seeds write to whatever database the configured secret points at."
+    },
+    {
+      "command": "npm start",
+      "repo": "payments-api",
+      "reason": "The API starts against the real queue and database it is configured for."
+    },
+    {
+      "command": "node invoke*.js",
+      "repo": "payments-worker",
+      "reason": "Runs the worker against real AWS resources."
+    }
+  ]
+}

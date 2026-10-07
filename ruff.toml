@@ -1,0 +1,6 @@
+# Lint for hooks/ and scripts/ (CI). Errors and pyflakes only; style is left to review.
+target-version = "py39"
+line-length = 130
+
+[lint]
+select = ["E9", "F", "B006"]

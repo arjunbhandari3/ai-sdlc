@@ -1,0 +1,143 @@
+{
+  "_doc": "Team ticket workflow, read by hooks/gates.py and the ship-ticket skill. Change it in a PR. A ticket's profile comes from its tracker type (or a label) when gates are enabled; each gate lists its artifacts in the ticket folder, who approves it, and what it blocks until approved. Approvers: 'developer' = the person at the terminal (their own reply); 'pm' / 'qa' = people listed under 'people' (tracker accountId), approving with a ticket comment 'Approved: <gate>' (Jira). Set the qa gate's targets to your environment branches.",
+  "profiles": {
+    "story": {
+      "match": {
+        "types": [
+          "Story",
+          "Task",
+          "Feature",
+          "New Feature",
+          "Improvement",
+          "Epic"
+        ]
+      },
+      "gates": [
+        "requirements",
+        "plan",
+        "ship",
+        "qa"
+      ],
+      "stages": [
+        "start",
+        "requirements",
+        "plan",
+        "build",
+        "verify",
+        "review",
+        "ship",
+        "promote",
+        "release"
+      ]
+    },
+    "bug": {
+      "match": {
+        "types": [
+          "Bug",
+          "Defect"
+        ]
+      },
+      "gates": [
+        "plan",
+        "ship",
+        "qa"
+      ],
+      "stages": [
+        "start",
+        "plan",
+        "build",
+        "verify",
+        "review",
+        "ship",
+        "promote",
+        "release"
+      ],
+      "notes": "No FRD: plan.md starts with the repro (steps, expected, actual) and lists ACs as 'fixed when ...'."
+    },
+    "hotfix": {
+      "match": {
+        "labels": [
+          "hotfix"
+        ]
+      },
+      "gates": [
+        "ship"
+      ],
+      "stages": [
+        "start",
+        "build",
+        "verify",
+        "review",
+        "ship",
+        "promote"
+      ],
+      "notes": "Smallest change; verify the fix and its neighbours; promote as the user names."
+    },
+    "chore": {
+      "match": {
+        "types": [
+          "Chore",
+          "Sub-task",
+          "Documentation"
+        ]
+      },
+      "gates": [
+        "ship"
+      ],
+      "stages": [
+        "start",
+        "build",
+        "verify",
+        "ship"
+      ]
+    }
+  },
+  "defaultProfile": "story",
+  "gates": {
+    "requirements": {
+      "artifacts": [
+        "frd.md",
+        "ac.md"
+      ],
+      "approvers": [
+        "developer"
+      ],
+      "blocks": "code"
+    },
+    "plan": {
+      "artifacts": [
+        "plan.md"
+      ],
+      "approvers": [
+        "developer"
+      ],
+      "blocks": "code"
+    },
+    "ship": {
+      "artifacts": [
+        "ship-list.md"
+      ],
+      "approvers": [
+        "developer"
+      ],
+      "blocks": "push"
+    },
+    "qa": {
+      "artifacts": [
+        "test-cases.md"
+      ],
+      "approvers": [
+        "developer"
+      ],
+      "blocks": "promote",
+      "targets": [
+        "qa",
+        "staging"
+      ]
+    }
+  },
+  "people": {
+    "pm": [],
+    "qa": []
+  }
+}

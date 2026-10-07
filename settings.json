@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(python3 .claude/scripts/sdlc.py status:*)",
+      "Bash(python3 .claude/scripts/sdlc.py dashboard:*)",
+      "Bash(python3 .claude/scripts/sdlc.py validate:*)",
+      "Bash(python3 .claude/scripts/sdlc.py gates status:*)",
+      "Bash(python3 .claude/scripts/sdlc.py gates request:*)",
+      "Bash(python3 .claude/scripts/sdlc.py gates enable:*)",
+      "Bash(python3 .claude/scripts/sdlc.py gates sync:*)",
+      "Bash(python3 .claude/scripts/sdlc.py gates validate:*)",
+      "Bash(python3 .claude/scripts/sdlc.py jira fetch:*)",
+      "Bash(python3 .claude/scripts/sdlc.py jira comments:*)",
+      "Bash(python3 .claude/scripts/sdlc.py jira check:*)",
+      "Bash(python3 .claude/scripts/sdlc.py targets:*)",
+      "Bash(python3 .claude/scripts/sdlc.py check:*)",
+      "Bash(python3 .claude/scripts/sdlc.py ci:*)",
+      "Bash(python3 .claude/scripts/sdlc.py docs:*)",
+      "Bash(python3 .claude/scripts/sdlc.py init:*)",
+      "Bash(python3 .claude/scripts/sdlc.py update)",
+      "Bash(python3 .claude/scripts/jira.py fetch:*)",
+      "Bash(python3 .claude/scripts/jira.py comments:*)",
+      "Bash(python3 .claude/scripts/jira.py check)",
+      "Bash(python3 .claude/scripts/bitbucket.py check)",
+      "Bash(python3 .claude/scripts/bitbucket.py find-pr:*)",
+      "Bash(python3 .claude/scripts/bitbucket.py preview:*)",
+      "Bash(python3 .claude/scripts/tickets.py status:*)",
+      "Bash(python3 .claude/scripts/check_targets.py:*)",
+      "Bash(python3 .claude/hooks/gates.py status:*)",
+      "Bash(python3 .claude/hooks/gates.py request:*)",
+      "Bash(python3 .claude/hooks/gates.py enable:*)",
+      "Bash(python3 .claude/hooks/gates.py sync:*)",
+      "Bash(python3 -m unittest:*)",
+      "Bash(git -C * status:*)",
+      "Bash(git -C * log:*)",
+      "Bash(git -C * diff:*)",
+      "Bash(git -C * branch:*)",
+      "Bash(git -C * fetch:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)"
+    ],
+    "ask": [
+      "Bash(python3 .claude/scripts/bitbucket.py post:*)",
+      "Bash(python3 .claude/scripts/jira.py comment :*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/run.py session-start"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/run.py prompt"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit|Grep|Glob|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/run.py pre-tool"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/run.py post-tool"
+          }
+        ]
+      }
+    ]
+  }
+}

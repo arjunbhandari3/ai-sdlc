@@ -1,0 +1,72 @@
+{
+  "_doc": "GitHub monorepo-style team with two repos, GitHub issues as tickets (branches like GH-42-fix-login), conventional commits, PRs into main only.",
+  "name": "Mobile",
+  "repos": [
+    {
+      "name": "mobile-app",
+      "role": "React Native app",
+      "onEdit": [
+        {
+          "files": "*.ts,*.tsx",
+          "run": "node_modules/.bin/prettier --write {file}",
+          "fix": true
+        },
+        {
+          "files": "*.ts,*.tsx",
+          "run": "node_modules/.bin/eslint --quiet {file}"
+        }
+      ]
+    },
+    {
+      "name": "mobile-bff",
+      "role": "Backend for frontend (Python)",
+      "onEdit": [
+        {
+          "files": "*.py",
+          "run": "ruff format {file}",
+          "fix": true
+        },
+        {
+          "files": "*.py",
+          "run": "ruff check {file}"
+        },
+        {
+          "files": "app/*.py",
+          "run": "python -m pytest -q {test}",
+          "test": "tests/test_{name}.py"
+        }
+      ]
+    }
+  ],
+  "git": {
+    "host": "github",
+    "org": "acme-mobile",
+    "base": "main",
+    "protectedBranches": [
+      "main"
+    ],
+    "environments": []
+  },
+  "tickets": {
+    "tracker": "github",
+    "pattern": "GH-\\d+"
+  },
+  "commits": {
+    "style": "conventional",
+    "maxSubjectLength": 72,
+    "forbidAiMentions": false
+  },
+  "data": {
+    "sensitivity": "pii",
+    "dataFiles": [
+      ".csv",
+      ".json.gz"
+    ]
+  },
+  "realSystems": [
+    {
+      "command": "python manage.py migrate*",
+      "reason": "Migrates whatever database DATABASE_URL points at."
+    }
+  ]
+}
