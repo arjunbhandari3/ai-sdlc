@@ -287,6 +287,15 @@ class ExamplesTest(unittest.TestCase):
             self.assertEqual([], _hooklib.validate_config(cfg), name)
 
 
+class SettingsTest(unittest.TestCase):
+    def test_wildcard_rules_do_not_use_prefix_syntax(self):
+        # Claude Code never matches a rule that mixes * with the trailing :* prefix syntax
+        with open(os.path.join(KIT, "settings.json")) as f:
+            perms = json.load(f)["permissions"]
+        mixed = [r for rules in perms.values() for r in rules if r.endswith(":*)") and "*" in r[:-3]]
+        self.assertEqual([], mixed)
+
+
 class ReferenceTablesTest(unittest.TestCase):
     def test_team_skills_stay_out_of_the_kit_table(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -135,7 +135,7 @@ def permissions(root):
     rows = ["| Command | Claude Code |", "|---|---|"]
     for kind, label in (("ask", "always asks"), ("allow", "runs without asking")):
         for rule in perms.get(kind, []):
-            m = re.match(r"Bash\((.*?)(:\*)?\)$", rule)
+            m = re.match(r"Bash\((.*?)(:?\*)?\)$", rule)
             rows.append(f"| `{m.group(1).strip() + (' …' if m.group(2) else '') if m else rule}` | {label} |")
     return rows
 
