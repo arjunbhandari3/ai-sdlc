@@ -51,3 +51,5 @@ gates). Read them when a rule matters; don't restate them from memory. `sdlc val
   to it, so the guards keep seeing them.
 - Outward steps (commit, push, PR, review or ticket comments) only after the user approves that exact step or the
   ship list containing it.
+- A skill started without a required argument (its `argument-hint`, e.g. the ticket for `/ship-ticket`): ask for it
+  in one short question before running any command.
