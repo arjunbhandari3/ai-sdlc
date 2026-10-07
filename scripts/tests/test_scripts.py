@@ -124,6 +124,8 @@ class BitbucketTest(unittest.TestCase):
         repo = os.path.join(TICKETS, "repo")
         os.makedirs(repo)
         git(repo, "init", "-q")
+        for key, value in (("user.name", "t"), ("user.email", "t@t")):  # CI runners have no git identity
+            git(repo, "config", key, value)
         git(repo, "remote", "add", "origin", "git@bitbucket.org:acme/api.git")
         dev = write(os.path.join(self.pr, "dev.md"), f"(drag in {self.shot})\n")
         qa = write(os.path.join(self.pr, "qa.md"), f"(drag in {self.shot})\n")
