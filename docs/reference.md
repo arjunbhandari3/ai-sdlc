@@ -31,6 +31,8 @@ fills it.
 | `service-tracer` | Read-only tracer across the workspace repos |
 <!-- /generated:agents -->
 
+Team agents live next to these as `agents/team-<name>.md` (`team-agents` table, same as team skills).
+
 ## Scripts (`scripts/`)
 
 <!-- generated:scripts from each script's docstring or header comment; edit there, then run sdlc docs -->

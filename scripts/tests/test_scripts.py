@@ -308,6 +308,17 @@ class ReferenceTablesTest(unittest.TestCase):
         self.assertIn("`team-billing`", team)
         self.assertNotIn("ship-ticket", team)
 
+    def test_team_agents_stay_out_of_the_kit_table(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in ("branch-reviewer", "team-billing-reviewer"):
+                write(os.path.join(tmp, "agents", f"{name}.md"), f"---\nname: {name}\ndescription: Does {name}.\n---\n")
+            kit = "\n".join(reference_tables.agents(tmp))
+            team = "\n".join(reference_tables.TABLES["team-agents"](tmp))
+        self.assertIn("`branch-reviewer`", kit)
+        self.assertNotIn("team-billing-reviewer", kit)
+        self.assertIn("`team-billing-reviewer`", team)
+        self.assertNotIn("`branch-reviewer`", team)
+
     def test_first_sentence_and_hooks_listed(self):
         self.assertEqual("Runs it, e.g. twice", reference_tables.first_sentence("runs it, e.g. twice. Then more."))
         self.assertEqual([], reference_tables.unlisted_hooks(KIT))
