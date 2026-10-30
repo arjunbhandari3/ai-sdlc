@@ -232,6 +232,13 @@ class GatesTest(KitTest):
             f.write("v2\n")
         self.check("deny", self.edit())                             # changed after approval
 
+    def test_ide_notes_before_the_reply(self):
+        self.gate("request", "requirements")
+        note = "<ide_opened_file>The user opened the file /x/ac.md in the IDE.</ide_opened_file>"
+        self.assertIn("still pending", self.say(note + "maybe"))
+        sel = "<ide_selection>The user selected:\nno\n</ide_selection>"
+        self.assertIn("APPROVED", self.say(note + sel + "yes"))
+
     def test_push_and_promote(self):
         self.approve("requirements", "plan")
         self.check("deny", self.bash("git -C api " + "commit -m 'PAY-1: x'"))

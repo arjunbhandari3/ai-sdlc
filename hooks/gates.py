@@ -29,6 +29,7 @@ from _hooklib import (
 
 APPROVE = re.compile(r"^\W*(yes|y|yeah|yep|ok|okay|approved?|go ahead|proceed|lgtm|sure)\b", re.I)
 REJECT = re.compile(r"^\W*(no|nope|rejected?|don'?t|stop|not approved)\b", re.I)
+IDE_NOTE = re.compile(r"<(ide_[a-z_]+)>.*?</\1>", re.S)
 DEFAULT_WORKFLOW = {
     "profiles": {"story": {"gates": ["requirements", "plan", "ship"]}},
     "defaultProfile": "story",
@@ -196,6 +197,7 @@ def context(text):
 
 
 def on_prompt(prompt):
+    prompt = IDE_NOTE.sub("", prompt)  # notes the IDE adds before the user's own words
     pending = []
     if os.path.isdir(TICKETS):
         for t in os.listdir(TICKETS):
